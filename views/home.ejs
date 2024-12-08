@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopKart - Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js" defer></script>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+    <!-- Navbar -->
+    <header class="bg-blue-600 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center py-4 px-6">
+            <!-- Logo -->
+            <a href="/" class="text-2xl font-bold text-white">ShopEase</a>
+    
+            <!-- Navigation -->
+            <nav>
+                <ul class="flex items-center space-x-6">
+                    <!-- Cart Icon -->
+                    <li class="relative">
+                        <a href="/cart" class="relative text-white hover:text-yellow-300 transition">
+                            <i class="fa-solid fa-cart-shopping text-3xl"></i>
+                            <!-- Cart Count Badge -->
+                            <% if (cartCount != 0) { %>
+                            <span class="absolute -top-2 -right-2 bg-yellow-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                                    <%= cartCount %>
+                            </span>
+                            <%  } %>
+                        </a>
+                    </li>
+    
+                    <% if (user) { %>
+                        <!-- Profile Dropdown -->
+                        <li class="relative">
+                            <a href="javascript:void(0)" id="profileToggle" class="flex items-center gap-2 bg-blue-700 text-white px-4 py-2 rounded-full transition hover:bg-blue-800">
+                                <i class="fas fa-user-circle"></i>
+                                <span class="hidden sm:inline"><%= user.name || 'Profile' %></span>
+                                <i class="fas fa-chevron-down"></i>
+                            </a>
+    
+                            <!-- Dropdown Menu -->
+                            <ul id="profileDropdown" class="absolute hidden bg-white text-gray-800 border rounded-md shadow-lg mt-2 right-0 w-40">
+                                <li><a href="/orders" class="block px-4 py-2 text-sm hover:bg-gray-100">Orders</a></li>
+                                <li><a href="/user/logout" class="block px-4 py-2 text-sm hover:bg-gray-100">Logout</a></li>
+                            </ul>
+                        </li>
+                    <% } else { %>
+                        <!-- Login Button -->
+                        <li>
+                            <a href="/user/login" class="text-white hover:text-yellow-300 transition">Login</a>
+                        </li>
+                    <% } %>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+
+    <!-- Hero Section -->
+    <section class="bg-cover bg-center h-96 flex items-center " style="background-image: url('/images/black-friday-elements-assortment.jpg');">
+        <div class=" bg-opacity-50 p-10 rounded-lg">
+            <h1 class="text-5xl font-bold text-gray-100">Welcome to ShopEase</h1>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="bg-gray-100 py-12">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-gray-800 text-center mb-8">Shop by Category</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Loop Starts Here -->
+                <% categories.forEach((category) => { %>
+                <div class="group relative overflow-hidden rounded-lg shadow-lg bg-white hover:shadow-2xl transition">
+                    <!-- <img 
+                    src="<%= category.image || 'https://via.placeholder.com/300x200?text=Category+Image' %>" 
+                    alt="<%= category.name %>" 
+                    class="w-full h-48 object-cover transition group-hover:scale-105"> -->
+                    <div class="p-4 text-center">
+                        <h3 class="text-lg font-semibold text-gray-800">
+                            <a href="/product/category/<%= category._id %>" class="hover:text-blue-600">
+                                <%= category.name %>
+                            </a>
+                        </h3>
+                        <a href="/product/category/<%= category._id %>" class="block">
+                                <p class="text-sm text-gray-600 mt-2">
+                                    Browse the best products in the <%= category.name %> category.
+                                </p>
+                            </a>
+                            </div>
+                      
+                </div>
+                <% }) %>
+                <!-- Loop Ends Here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section class="py-16 bg-gray-100">
+        <div class="container mx-auto text-center">
+            <h2 class="text-3xl font-bold mb-10 text-gray-700">Featured Products</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
+                <% for (let product of products) { %>
+                    <div class="bg-white rounded-lg shadow-lg p-6 transform hover:scale-105 transition">
+                        <a href="/product/<%= product.id %>" class="block">
+                            <img src="<%= product.thumbnail %>" alt="<%= product.title %>" class="w-full h-48 object-contain rounded-md">
+                            <h3 class="mt-4 text-xl font-semibold text-gray-800"><%= product.title %></h3>
+                            <p class="mt-2 text-lg text-blue-600">$<%= product.price %></p>
+                            <button class="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg font-bold transition hover:bg-blue-700" >View Product</button>
+                        </a>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-blue-600 text-white py-4">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2024 ShopEase. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+       
+
+            document.getElementById("profileToggle")?.addEventListener("click", function () {
+            const dropdown = document.getElementById("profileDropdown");
+            dropdown.classList.toggle("hidden");
+        });
+        
+        // Close the dropdown if clicked outside
+        document.addEventListener("click", function (event) {
+            const dropdown = document.getElementById("profileDropdown");
+            const toggleButton = document.getElementById("profileToggle");
+            
+            if (!toggleButton.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.add("hidden");
+            }
+        });
+        
+    
+
+    
+    </script>
+</body>
+</html>
